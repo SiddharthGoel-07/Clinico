@@ -36,6 +36,8 @@ const LoginSignup = ({ navigate }) => {
       return
     }
 
+    console.log("yes");
+
     try {
       if (!isLogin) {
         const { data } = await axios.post(backendURL + "/api/user/register", {
@@ -43,10 +45,13 @@ const LoginSignup = ({ navigate }) => {
           password: formData.password,
           email: formData.email
         });
-
+          
+        console.log("data:", data);
         if (data.success) {
-          localStorage.getItem("token", data.token);
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
           setToken(data.token);
+          setUser(data.user);
           toast.success(data.message);
         }
         else {
@@ -61,7 +66,10 @@ const LoginSignup = ({ navigate }) => {
 
         if (data.success) {
           localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
           setToken(data.token);
+          setUser(data.user);
+          toast.success(data.message);
         } else {
           toast.error(data.message);
         }
