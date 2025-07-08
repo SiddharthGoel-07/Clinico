@@ -10,8 +10,6 @@ const loginDoctor = async(req,res)=>{
         
         const { email, password }=req.body;
 
-        console.log("checking");
-
         const user= await doctorModel.findOne({email})
 
         if(!user)
