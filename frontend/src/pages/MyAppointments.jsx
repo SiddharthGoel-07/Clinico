@@ -5,7 +5,7 @@ import { Calendar, Clock, Phone, MapPin, Filter, Search } from "lucide-react"
 import { useAppContext } from "../context/AppContext"
 
 const MyAppointments = () => {
-  const { appointments, doctors, updateAppointmentStatus, user } = useAppContext()
+  const { appointments, doctors, user } = useAppContext()
   const [filterStatus, setFilterStatus] = useState("all")
   const [searchTerm, setSearchTerm] = useState("")
 
@@ -51,31 +51,8 @@ const MyAppointments = () => {
     }
   }
 
-  const handleStatusChange = (appointmentId, newStatus) => {
-    const updates = {}
-    switch (newStatus) {
-      case "confirmed":
-        updates.payment = true
-        updates.cancelled = false
-        updates.isCompleted = false
-        break
-      case "cancelled":
-        updates.cancelled = true
-        updates.payment = false
-        updates.isCompleted = false
-        break
-      case "completed":
-        updates.isCompleted = true
-        updates.cancelled = false
-        updates.payment = true
-        break
-      default:
-        updates.payment = false
-        updates.cancelled = false
-        updates.isCompleted = false
-    }
-    updateAppointmentStatus(appointmentId, updates)
-  }
+  // Remove ability to change appointment status from user side
+  const handleStatusChange = () => {} // disabled
 
   return (
     <div className="py-12 bg-gray-50 min-h-screen">
@@ -176,46 +153,6 @@ const MyAppointments = () => {
                           <MapPin className="w-4 h-4" />
                           <span>Clinic Visit</span>
                         </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        {status === "pending" && (
-                          <>
-                            <button
-                              onClick={() => handleStatusChange(appointment._id, "confirmed")}
-                              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
-                            >
-                              Confirm
-                            </button>
-                            <button
-                              onClick={() => handleStatusChange(appointment._id, "cancelled")}
-                              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors font-medium"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
-
-                        {status === "confirmed" && (
-                          <>
-                            <button className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors font-medium">
-                              Reschedule
-                            </button>
-                            <button
-                              onClick={() => handleStatusChange(appointment._id, "cancelled")}
-                              className="border border-red-600 text-red-600 px-4 py-2 rounded-lg hover:bg-red-600 hover:text-white transition-colors font-medium"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
-
-                        <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center space-x-2">
-                          <Phone className="w-4 h-4" />
-                          <span>Contact Doctor</span>
-                        </button>
                       </div>
                     </div>
                   </div>

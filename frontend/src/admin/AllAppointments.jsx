@@ -5,7 +5,7 @@ import { Search, Filter, Calendar, Clock, User, CheckCircle, XCircle, AlertCircl
 import { useAdminContext } from "./AdminContext"
 
 const AllAppointments = () => {
-  const { appointments, updateAppointmentStatus } = useAdminContext()
+  const { appointments } = useAdminContext()
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
   const [filterDate, setFilterDate] = useState("")
@@ -60,31 +60,8 @@ const AllAppointments = () => {
     }
   }
 
-  const handleStatusChange = (appointmentId, newStatus) => {
-    const updates = {}
-    switch (newStatus) {
-      case "confirmed":
-        updates.payment = true
-        updates.cancelled = false
-        updates.isCompleted = false
-        break
-      case "cancelled":
-        updates.cancelled = true
-        updates.payment = false
-        updates.isCompleted = false
-        break
-      case "completed":
-        updates.isCompleted = true
-        updates.cancelled = false
-        updates.payment = true
-        break
-      default:
-        updates.payment = false
-        updates.cancelled = false
-        updates.isCompleted = false
-    }
-    updateAppointmentStatus(appointmentId, updates)
-  }
+  // Remove ability to change appointment status from admin side
+  const handleStatusChange = () => {} // disabled
 
   return (
     <div>
@@ -200,30 +177,7 @@ const AllAppointments = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        {status === "pending" && (
-                          <>
-                            <button
-                              onClick={() => handleStatusChange(appointment._id, "confirmed")}
-                              className="text-green-600 hover:text-green-900"
-                            >
-                              Confirm
-                            </button>
-                            <button
-                              onClick={() => handleStatusChange(appointment._id, "cancelled")}
-                              className="text-red-600 hover:text-red-900"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
-                        {status === "confirmed" && (
-                          <button
-                            onClick={() => handleStatusChange(appointment._id, "completed")}
-                            className="text-blue-600 hover:text-blue-900"
-                          >
-                            Complete
-                          </button>
-                        )}
+                        {/* Remove Confirm/Cancel/Complete buttons from UI */}
                         <button className="text-gray-600 hover:text-gray-900">View</button>
                       </div>
                     </td>

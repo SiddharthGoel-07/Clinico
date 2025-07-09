@@ -6,6 +6,8 @@ import appointmentModel from "../models/appointment.js";
 import userModel from "../models/userModel.js";
 import path from "path";
 import fs from "fs";
+import cloudinary from "../config/cloudinary.js"; 
+
 
 //api for adding doctor
 
@@ -58,14 +60,17 @@ const addDoctor =async(req, res) =>{
 
     const salt=await bcrypt.genSalt(10);
     const hashedPassword= await bcrypt.hash(password,salt);
-    const filePath = path.resolve(imageFile.path);
-    const base64Image = fs.readFileSync(filePath, { encoding: "base64" });
+    
+    const cloudResult = await cloudinary.uploader.upload(imageFile.path, {
+    folder:"doctors-images",
+    });
+     
 
 
     const doctorData= {
      name,
      email,
-     image:"https://example.com/images/dr-priya.jpg",
+     image:cloudResult.secure_url,
      password:hashedPassword,
      speciality,
      degree,

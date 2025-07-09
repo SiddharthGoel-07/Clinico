@@ -6,6 +6,7 @@ import cors from "cors";
 import connectDB from "./config/mongodb.js";
 import userRouter from "./routes/usersRoute.js";
 import adminRouter from "./routes/adminRoute.js";
+import docRouter from "./routes/docRoute.js";
 
 const app= express();
 
@@ -19,6 +20,7 @@ app.use(cors());
 
 app.use("/api/user",userRouter);
 app.use("/api/admin",adminRouter);
+app.use("/api/doctor", docRouter);
 
 
 app.listen(port, () => {

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import axios from "axios"
 import { Calendar, Users, Clock, TrendingUp, Star } from "lucide-react"
 import { useAdminContext } from "./AdminContext"
 
@@ -10,16 +11,27 @@ const DoctorPanel = () => {
   const [auth, setAuth] = useState({ email: '', password: '' })
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loginError, setLoginError] = useState("")
+  const [doctorData, setDoctorData] = useState(null)
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
-    const found = doctors.find(doc => doc.email === auth.email && doc.password === auth.password)
-    if (found) {
-      setSelectedDoctor(found._id)
-      setIsAuthenticated(true)
-      setLoginError("")
-    } else {
-      setLoginError("Invalid email or password")
+    setLoginError("")
+    try {
+      const backendURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000"
+      const { data } = await axios.post(
+        backendURL + "/api/doctor/login",
+        auth
+      )
+      if (data.success) {
+        setSelectedDoctor(data.user._id)
+        setDoctorData(data.user)
+        setIsAuthenticated(true)
+        setLoginError("")
+      } else {
+        setLoginError(data.message || "Invalid email or password")
+      }
+    } catch (err) {
+      setLoginError("Server error. Please try again.")
     }
   }
 
@@ -57,7 +69,8 @@ const DoctorPanel = () => {
     )
   }
 
-  const selectedDoctorData = doctors.find((doc) => doc._id === selectedDoctor)
+  // Use doctorData if available, else fallback to context
+  const selectedDoctorData = doctorData || doctors.find((doc) => doc._id === selectedDoctor)
   const doctorAppointments = appointments.filter((apt) => apt.docId === selectedDoctor)
 
   // Function to derive status from boolean fields
@@ -106,7 +119,8 @@ const DoctorPanel = () => {
               <img
                 src={selectedDoctorData.image || "/placeholder.svg"}
                 alt={selectedDoctorData.name}
-                className="w-24 h-24 rounded-full object-cover"
+                className="w-32 h-32 rounded-full border-4 border-white shadow-md"
+                style={{ objectFit: "cover", objectPosition: "top center", background: "#f3f4f6" }}
               />
               <div className="flex-1">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedDoctorData.name}</h2>
